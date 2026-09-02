@@ -1,0 +1,36 @@
+{
+  "name": "lexops-sovereign-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LexOps Sovereign OS — نظام تشغيل قانوني سيادي لحوسبة الأنظمة السعودية (المرجع: LEX-ARCH-2026-ROOT)",
+  "license": "UNLICENSED",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "dev:backend": "pnpm --filter @lexops/backend dev",
+    "dev:ssc": "pnpm --filter @lexops/ssc dev",
+    "dev:console": "pnpm --filter @lexops/console dev",
+    "contracts:validate": "pnpm --filter @lexops/contracts validate"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "eslint": "^9.9.0",
+    "js-yaml": "^5.3.0",
+    "prettier": "^3.3.3",
+    "tsx": "^4.23.12",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

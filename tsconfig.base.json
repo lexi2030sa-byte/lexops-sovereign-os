@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+      "@lexops/contracts": ["packages/contracts/dist"],
+      "@lexops/shared": ["packages/shared/dist"],
+      "@lexops/c9-ledger": ["packages/c9-ledger/dist"],
+      "@lexops/rule-engine": ["packages/rule-engine/dist"],
+      "@lexops/lexi": ["packages/lexi/dist"],
+      "@lexops/geofencing": ["packages/geofencing/dist"],
+      "@lexops/govlink": ["packages/govlink/dist"],
+      "@lexops/sade": ["packages/sade/dist"],
+      "@lexops/attendance": ["packages/attendance/dist"],
+      "@lexops/hilap": ["packages/hilap/dist"],
+      "@lexops/zatca": ["packages/zatca/dist"],
+      "@lexops/persistence": ["packages/persistence/dist"],
+      "@lexops/spe": ["packages/spe/dist"],
+      "@spe/*": ["packages/spe/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build"]
+}

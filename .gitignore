@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+service-account-key.json
+*.pem
+*.key
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore.rules.backup
+
+# Flutter
+apps/mobile/build/
+apps/mobile/.dart_tool/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Coverage
+coverage/
+
+# Temp
+tmp/
