@@ -1,0 +1,23 @@
+{
+  "name": "@lexops/spe",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SPE — محرك السياسات والرواتب السيادي: JSON Logic + SOCF + WPS + تكرار 180 يوم + القرار الملكي 11438 + إقفال شهري + C9",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lexops/c9-ledger": "workspace:*",
+    "@lexops/shared": "workspace:*",
+    "@lexops/zatca": "workspace:*",
+    "json-logic-js": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "vitest": "^2.1.9"
+  }
+}

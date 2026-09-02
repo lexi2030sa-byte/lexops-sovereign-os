@@ -1,0 +1,125 @@
+{
+  "generatedAt": "2026-08-14T18:25:37.789Z",
+  "perFile": [
+    {
+      "file": "JSON منفصل وكامل البلدية 369ef68b731d80909ff8d251e 394bba35e4eb81b684f1ddf1d4d3f159.md",
+      "captured": 38,
+      "parsed": 38,
+      "unique": 38
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "captured": 480,
+      "parsed": 473,
+      "unique": 473
+    },
+    {
+      "file": "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "captured": 661,
+      "parsed": 656,
+      "unique": 656
+    }
+  ],
+  "errors": [
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 1759,
+      "error": "Expected ':' after property name in JSON at position 95 (line 7 column 8)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-063\",\n\n\"activity\": \"النقل البري للركاب خارج المدن والنقل الدولي\",\n\n\"\n\n{\n\n\"rule_id\": \"NISAB-063\",\n\n\""
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 3559,
+      "error": "Expected ',' or '}' after property value in JSON at position 27 (line 3 column 25)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-\n\n{\n\n\"rule_id\": \"NISAB-126\",\n\n\"activity\": \"المؤسسات المالية\",\n\n\"size\": \"كبيرة\",\n\n\"red_range\": \"0%\","
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 5355,
+      "error": "Expected ':' after property name in JSON at position 93 (line 9 column 17)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-190\",\n\n\"activity\": \"المعاهد\",\n\n\"size\": \"متوسطة فئة-ب\",\n\n\"red_range\n\n{\n\n\"rule_id\": \"NISAB-190\",\n\n\"ac"
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 7157,
+      "error": "Expected ',' or '}' after property value in JSON at position 496 (line 48 column 1)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-254\",\n\n\"activity\": \"محطات الوقود\",\n\n\"size\": \"صغيرة فئة-ب\",\n\n\"red_range\": \"0%\",\n\n\"low_green_min\": 7,"
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 8941,
+      "error": "Expected ':' after property name in JSON at position 230 (line 21 column 8)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-317\",\n\n\"activity\": \"الإيواء والفنادق\",\n\n\"size\": \"متوسطة فئة-ج\",\n\n\"red_range\": \"0%\",\n\n\"low_green_min"
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 10699,
+      "error": "Expected ':' after property name in JSON at position 151 (line 13 column 21)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-379\",\n\n\"activity\": \"الصالات والمراكز الرياضية\",\n\n\"size\": \"عمالقة\",\n\n\"red_range\": \"0%\",\n\n\"low_green_"
+    },
+    {
+      "file": "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "lineNo": 12365,
+      "error": "Expected double-quoted property name in JSON at position 216 (line 21 column 1)",
+      "snippet": "{\n\n\"rule_id\": \"NISAB-438\",\n\n\"activity\": \"التموين والإعاشة\",\n\n\"size\": \"كبيرة\",\n\n\"red_range\": \"0%\",\n\n\"low_green_min\": 20,\n"
+    },
+    {
+      "file": "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "lineNo": 1555,
+      "error": "Expected ',' or '}' after property value in JSON at position 111 (line 7 column 64)",
+      "snippet": "{\n\n\"rule_id\": \"R35-1\",\n\n\"rule_type\": \"إلزامي\",\n\n\"description\": \"إعداد خطة وبرنامج للتدريب يتناسب مع التأه\n\n{\n\n\"file_name"
+    },
+    {
+      "file": "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "lineNo": 6445,
+      "error": "Expected ',' or '}' after property value in JSON at position 132 (line 9 column 19)",
+      "snippet": "{\n\n\"rule_id\": \"R143-1\",\n\n\"rule_type\": \"إلزامي\",\n\n\"description\": \"تخصص صحيفة جزاءات لكل عامل وتحفظ في ملف خدمته\",\n\n\"penal"
+    },
+    {
+      "file": "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "lineNo": 8077,
+      "error": "Expected ',' or '}' after property value in JSON at position 96 (line 7 column 48)",
+      "snippet": "{\n\n\"rule_id\": \"R159-2\",\n\n\"rule_type\": \"إلزامي\",\n\n\"description\": \"استقبال طلبات الراغبين في\n\n{\n\n\"file_name\": \"اللائحة الت"
+    },
+    {
+      "file": "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "lineNo": 9741,
+      "error": "Expected ',' or ']' after array element in JSON at position 721 (line 54 column 1)",
+      "snippet": "{\n\n\"rule_id\": \"R194-1\",\n\n\"rule_type\": \"حظر\",\n\n\"description\": \"لا يجوز تأجير الترخيص للغير بأي وسيلة كانت\",\n\n\"penalty\":\n\n"
+    },
+    {
+      "file": "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "lineNo": 12509,
+      "error": "Expected ',' or '}' after property value in JSON at position 209 (line 7 column 161)",
+      "snippet": "{\n\n\"rule_id\": \"RC9-1\",\n\n\"rule_type\": \"استثناء\",\n\n\"description\": \"العاملة التي أنهت العقد خلال 6 أشهر من تاريخ زواجها أو\n"
+    }
+  ],
+  "totalErrors": 12,
+  "configStats": {
+    "totalRules": 1167,
+    "executable": 497,
+    "descriptive": 670,
+    "byCategory": {
+      "municipality": 38,
+      "localization": 473,
+      "labor": 656
+    },
+    "bySeverity": {
+      "severe": 601,
+      "moderate": 114,
+      "minor": 452
+    },
+    "sources": [
+      "بصيغة JSON مكتب العمل 369ef68b731d802d9b3bcc25e383 394bba35e4eb815ca217e8b223a04bba.md",
+      "التوطين و نطاقات 2 بصيغة JSON 369ef68b731d80679d23 394bba35e4eb816bb50ae7c50eee172a.md",
+      "JSON منفصل وكامل البلدية 369ef68b731d80909ff8d251e 394bba35e4eb81b684f1ddf1d4d3f159.md"
+    ]
+  },
+  "detectedSources": [
+    {
+      "file": "الزكاه والضريبة 369ef68b731d80d4918dc9cc08cfbff6 394bba35e4eb811c8e40f5dd17a5047d.md",
+      "captured": 43,
+      "parsed": 39
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@lexops/persistence",
+  "version": "0.1.0",
+  "private": true,
+  "description": "طبقة الاستمرارية الحية — Firestore متعدد المستأجرين (entities/branches/employees/attendance/violations/objections/payroll/c9_ledger) مع تراجع آمن للذاكرة",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lexops/c9-ledger": "workspace:*",
+    "@lexops/attendance": "workspace:*",
+    "@lexops/shared": "workspace:*",
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.9"
+  }
+}

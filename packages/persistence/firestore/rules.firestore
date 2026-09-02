@@ -1,0 +1,84 @@
+rules_version = '2';
+
+// ============================================================================
+// LexOps Firestore Rules — PH-N1 (ربط Firestore الحقيقي)
+// المرجع: قرار المؤسس (البنية المتداخلة tenants/{tenantId}) + وثيقة قاعدة
+// بيانات Firestore + USDS-02.
+//
+// الحاكمات:
+//  1) Fortress 700: لا وصول متقاطع بين المنشآت إطلاقاً (isSameTenant).
+//  2) c9_ledger Append-Only: لا UPDATE ولا DELETE نهائياً (الحصانة التنفيذية).
+//  3) payroll/violations: كتابة مقيدة للأدوار المصرحة، قراءة داخل المنشأة.
+//  4) لا اختراع صلاحيات — كل دور من سجل RBAC الحالي.
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ---------- بطاقات الموظفين (staff/{userId}) ----------
+    match /staff/{userId} {
+      allow read: if request.auth != null &&
+        (request.auth.uid == userId || isFounder());
+      allow write: if false;
+    }
+
+    // ---------- المستأجر ----------
+    match /tenants/{tenantId} {
+      allow read: if isSameTenant(tenantId);
+      allow create: if isFounder();
+      allow update: if isSameTenant(tenantId) && hasRoleIn(['founder', 'entity_admin']);
+      allow delete: if false;
+    }
+
+    // ---------- البيانات التشغيلية داخل المستأجر ----------
+    match /tenants/{tenantId}/{group} {
+      allow read: if isSameTenant(tenantId) && hasRoleIn([
+        'founder', 'entity_admin', 'hr_manager', 'compliance_officer',
+        'field_inspector', 'legal_advisor', 'payroll_officer'
+      ]);
+
+      // كتابة مقيدة حسب المجموعة
+      allow create: if isSameTenant(tenantId) && canWriteGroup(group, request.auth.token.role);
+      allow update: if false;   // الحصانة: لا تحديث على السجلات التشغيلية الحية
+      allow delete: if false;   // الحصانة: لا حذف
+    }
+
+    // ---------- سجل C9 داخل المستأجر (Append-Only) ----------
+    match /tenants/{tenantId}/c9_ledger/{eventId} {
+      allow read: if isSameTenant(tenantId) && hasRoleIn([
+        'founder', 'entity_admin', 'hr_manager', 'compliance_officer',
+        'field_inspector', 'legal_advisor', 'payroll_officer'
+      ]);
+      allow create: if isSameTenant(tenantId) && hasRoleIn([
+        'founder', 'entity_admin', 'compliance_officer', 'field_inspector', 'payroll_officer'
+      ]);
+      allow update, delete: if false;   // Immutable — SOV_950
+    }
+
+    // ---------- دوال مساعدة ----------
+    function isSameTenant(tenantId) {
+      return request.auth != null &&
+             request.auth.token.entity_id == tenantId;
+    }
+
+    function hasRoleIn(roles) {
+      return request.auth != null &&
+             request.auth.token.role in roles;
+    }
+
+    function isFounder() {
+      return request.auth != null &&
+             request.auth.token.role == 'founder';
+    }
+
+    // صلاحيات الكتابة حسب المجموعة (من السجل الحالي — لا اختراع)
+    function canWriteGroup(group, role) {
+      return (group == 'employees' && role in ['founder', 'entity_admin', 'hr_manager']) ||
+             (group == 'attendance' && role in ['founder', 'entity_admin', 'field_inspector', 'employee', 'freelancer']) ||
+             (group == 'branches' && role in ['founder', 'entity_admin']) ||
+             (group == 'violations' && role in ['founder', 'entity_admin', 'compliance_officer', 'field_inspector']) ||
+             (group == 'objections' && role in ['founder', 'entity_admin', 'hr_manager', 'legal_advisor']) ||
+             (group == 'payroll' && role in ['founder', 'entity_admin', 'payroll_officer']) ||
+             (group == 'entities' && role in ['founder', 'entity_admin']);
+    }
+  }
+}
