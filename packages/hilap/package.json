@@ -1,0 +1,22 @@
+{
+  "name": "@lexops/hilap",
+  "version": "2.0.0",
+  "private": true,
+  "description": "HILAP 2.0 — بروتوكول التحكيم والتدخل البشري الحاكم لنقض الحظر الآلي (تجميد القرار + دورة 48 ساعة + كتلة C9)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lexops/c9-ledger": "workspace:*",
+    "@lexops/lexi": "workspace:*",
+    "@lexops/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "vitest": "^2.1.9"
+  }
+}

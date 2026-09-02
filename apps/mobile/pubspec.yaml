@@ -1,0 +1,14 @@
+name: lexops_mobile
+description: LexOps Mobile — Field Ops (الحضور والتوثيق المكاني السيادي)
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

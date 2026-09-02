@@ -1,0 +1,20 @@
+{
+  "name": "@lexops/c9-ledger",
+  "version": "0.1.0",
+  "private": true,
+  "description": "نخاع C9 — سجل Append-Only موقّع بـ HMAC-SHA256 مع سلسلة هاشات ومحفزات حماية التلاعب",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lexops/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "vitest": "^2.1.9"
+  }
+}

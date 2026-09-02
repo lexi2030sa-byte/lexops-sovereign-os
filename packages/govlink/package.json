@@ -1,0 +1,21 @@
+{
+  "name": "@lexops/govlink",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GovLink — بوابة الربط الحكومي (قوى/مكتب العمل/التأمينات/ZATCA/سداد/إيفاء). تُبنى برمجياً الآن وتُفعّل عند الموافقة الرسمية.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lexops/contracts": "workspace:*",
+    "@lexops/shared": "workspace:*",
+    "@lexops/c9-ledger": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.9"
+  }
+}

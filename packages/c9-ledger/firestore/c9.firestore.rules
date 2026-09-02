@@ -1,0 +1,59 @@
+rules_version = '2';
+
+// ============================================================================
+// C9 Security Rules — Immutable Append-Only Ledger (Fortress 700)
+// المرجع: USDS-02 + قواعد أمن Firestore (نموذج متعدد المستأجرين)
+// هذه القواعد تفرض الحصانة التنفيذية: لا UPDATE ولا DELETE على سجل C9.
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ---------- سجل C9 داخل المستأجر (بنية متداخلة معتمدة) ----------
+    match /tenants/{tenantId}/c9_ledger/{eventId} {
+      // القراءة: موظف من نفس المنشأة فقط
+      allow read: if
+        isSameTenant(tenantId) && hasRoleIn(['founder', 'entity_admin', 'hr_manager',
+                                              'compliance_officer', 'field_inspector',
+                                              'legal_advisor', 'payroll_officer']);
+
+      // الإنشاء: مديرون/محققون فقط — ومن نفس المنشأة
+      allow create: if
+        isSameTenant(tenantId) && hasRoleIn(['founder', 'entity_admin', 'compliance_officer',
+                                             'field_inspector', 'payroll_officer']);
+
+      // الحصانة التنفيذية: يُرفض أي تعديل أو حذف نهائياً (Append-Only)
+      allow update, delete: if false;
+    }
+
+    // ---------- بطاقات الموظفين (staff/{userId}) ----------
+    match /staff/{userId} {
+      allow read: if request.auth != null &&
+        (request.auth.uid == userId || isFounder());
+      allow write: if false;
+    }
+
+    // ---------- البيانات الوصفية للمستأجر ----------
+    match /tenants/{tenantId} {
+      allow read: if isSameTenant(tenantId);
+      allow create: if isFounder();
+      allow update: if isSameTenant(tenantId) && hasRoleIn(['founder', 'entity_admin']);
+      allow delete: if false;
+    }
+
+    // ---------- دوال مساعدة ----------
+    function isSameTenant(tenantId) {
+      return request.auth != null &&
+             request.auth.token.entity_id == tenantId;
+    }
+
+    function hasRoleIn(roles) {
+      return request.auth != null &&
+             request.auth.token.role in roles;
+    }
+
+    function isFounder() {
+      return request.auth != null &&
+             request.auth.token.role == 'founder';
+    }
+  }
+}

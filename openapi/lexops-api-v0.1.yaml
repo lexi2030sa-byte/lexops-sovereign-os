@@ -1,0 +1,795 @@
+openapi: 3.0.3
+info:
+  title: LexOps Sovereign OS — API Contract v0.1
+  description: >
+    العقد السيادي الموحد لمسارات النظام قبل أي UI أو تكامل خارجي.
+    المرجع: الأمر التنفيذي LEXOPS-T6-API-CONTRACT-01.
+    الحاكمات: Fortress 700 (عزل المنشآت) + الرموز السيادية SOV_401/403/422 + غلاف
+    الاستجابة الموحد (SovereignEnvelope). لا اختراع صلاحيات خارج السجل الحالي.
+  version: 0.1.0
+  contact:
+    name: LexOps Sovereign OS
+servers:
+  - url: /api/v0.1
+    description: LexOps Sovereign API — البادئة الحاكمة
+
+security:
+  - BearerAuth: []
+  - SovereignHeaders: []
+
+tags:
+  - name: sade
+    description: التوثيق الذاتي السيادي (SADE)
+  - name: attendance
+    description: الحضور الجغرافي (GeoGate)
+  - name: hilap
+    description: التحكيم البشري الحاكم (HILAP 2.0)
+  - name: zatca
+    description: الفوترة الإلكترونية (ZATCA)
+  - name: sovereign
+    description: مسارات المؤسس الحصرية (Fortress 700)
+  - name: health
+    description: الصحة العامة
+
+paths:
+  /health:
+    get:
+      tags: [health]
+      summary: فحص الصحة العامة
+      description: مسار عام — لا يتطلب هوية سيادية.
+      security: []
+      responses:
+        '200':
+          description: النظام سليم
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [sovereign_ok]
+
+  /sade/triggers:
+    post:
+      tags: [sade]
+      summary: تشغيل تدفق التوثيق الذاتي
+      description: >
+        تقييم قاعدة عبر محرك القواعد (مع الفلتر الملكي 11438) → توليد مستند PDF
+        افتراضي مختوم HMAC-SHA256 → ربط بكتلة C9.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SadeTriggerRequest'
+      responses:
+        '200':
+          description: اكتمل التدفق — المستند مختوم ومرتبط بكتلة C9
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SadeTriggerResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /attendance/check-in:
+    post:
+      tags: [attendance]
+      summary: تسجيل حضور
+      description: >
+        تسجيل حضور عبر GeoGate — يتحقق من الموقع (Haversine) ويصيد التزييف/السرعة/
+        تضارب الزمن. أي شذوذ → certainty = 0 ورفض.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceAttemptRequest'
+      responses:
+        '200':
+          description: نتيجة معالجة الحضور (قبول أو رفض مبرر)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceOutcomeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /attendance/check-out:
+    post:
+      tags: [attendance]
+      summary: تسجيل انصراف
+      description: تسجيل انصراف عبر GeoGate بنفس ضمانات الحضور.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceAttemptRequest'
+      responses:
+        '200':
+          description: نتيجة معالجة الانصراف
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceOutcomeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /hilap/freeze:
+    post:
+      tags: [hilap]
+      summary: تجميد قرار دون عتبة LEXI
+      description: >
+        تجميد قرار آلي دون العتبة (80% اعتيادي / 90% جسيم) وتحويله حصرياً لمسار
+        التحكيم البشري (HILAP).
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HilapFreezeRequest'
+      responses:
+        '200':
+          description: نتيجة التجميد
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HilapFreezeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /hilap/cases:
+    post:
+      tags: [hilap]
+      summary: فتح قضية نقض حظر (المرحلة 1)
+      description: >
+        تقديم طلب نقض الحظر الآلي مع الأدلة (بصمات) — المرحلة الأولى من دورة
+        التحكيم (≤ 48 ساعة).
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HilapOpenRequest'
+      responses:
+        '200':
+          description: قضية مفتوحة
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HilapOpenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /hilap/review:
+    post:
+      tags: [hilap]
+      summary: مراجعة مرحلة لاحقة من التحكيم
+      description: >
+        مراجعة أولية (hr_manager/compliance_officer) أو قانونية (legal_advisor) أو
+        قرار إدارة (org_owner/founder). كل تدخل يُسجل كتلة C9 إلزامية.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HilapReviewRequest'
+      responses:
+        '200':
+          description: نتيجة المراجعة مع كتلة C9 المرتبطة
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HilapReviewResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /zatca/seal:
+    post:
+      tags: [zatca]
+      summary: ختم فاتورة إلكترونية
+      description: >
+        توليد UBL 2.1 + هاش SHA-256 (تسلسل مماثل لسلسلة C9) + QR-TLV + ختم HMAC.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZatcaSealRequest'
+      responses:
+        '200':
+          description: الفاتورة مختومة
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZatcaSealResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /zatca/verify:
+    post:
+      tags: [zatca]
+      summary: التحقق من ختم فاتورة
+      description: إعادة حساب الهاش والختم ومطابقتهما مع القيم المرسلة.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZatcaVerifyRequest'
+      responses:
+        '200':
+          description: نتيجة التحقق
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZatcaVerifyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /sovereign/pulse:
+    get:
+      tags: [sovereign]
+      summary: نبض النظام الشامل
+      description: >
+        كشف حالة كل المحركات (القواعد المُحمّلة، SADE، Attendance، HILAP، ZATCA)
+        وسلامة سجل C9. للمؤسس حصراً — مسار /sovereign/ عبر Fortress 700.
+      security:
+        - BearerAuth: []
+        - SovereignHeaders: []
+      responses:
+        '200':
+          description: نبض النظام
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PulseResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    SovereignHeaders:
+      type: apiKey
+      in: header
+      name: X-Entity-Id
+
+  schemas:
+    # ---------- رؤوس السيادة ----------
+    SovereignHeaderFields:
+      type: object
+      properties:
+        Authorization:
+          type: string
+          description: Bearer token (Custom Claims)
+        X-User-Id:
+          type: string
+        X-Entity-Id:
+          type: string
+        X-Request-Id:
+          type: string
+        X-Sovereign-Role:
+          type: string
+          enum: [founder, entity_admin, hr_manager, compliance_officer, field_inspector, legal_advisor, payroll_officer, employee, freelancer]
+
+    # ---------- غلاف الاستجابة ----------
+    SovereignEnvelope:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          nullable: true
+        meta:
+          type: object
+          properties:
+            requestId:
+              type: string
+
+    ApiError:
+      type: object
+      required: [success, message, data, meta]
+      properties:
+        success:
+          type: boolean
+          enum: [false]
+        message:
+          type: string
+        data:
+          nullable: true
+          enum: [null]
+        meta:
+          type: object
+          required: [requestId]
+          properties:
+            requestId:
+              type: string
+
+    # ---------- SADE ----------
+    SadeTriggerRequest:
+      type: object
+      required: [event, ruleId, data]
+      properties:
+        event:
+          type: string
+          enum: [PHASE_COMPLETED, STEP_COMPLETED, PILOT_STARTED, PILOT_COMPLETED, REPORT_GENERATED, GOV_LETTER_SENT, CONTRACT_DRAFTED, CONTRACT_SIGNED, VIOLATION_ADJUDICATED]
+        ruleId:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        severity:
+          type: string
+          enum: [severe, moderate, minor]
+        history:
+          type: array
+          items:
+            type: object
+            properties:
+              eventType:
+                type: string
+                enum: [early_warning, violation]
+              ruleId:
+                type: string
+              occurredAt:
+                type: string
+                format: date-time
+        now:
+          type: string
+          format: date-time
+
+    SadeTriggerResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            document:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                  enum: [STEP_RECORD, PHASE_REPORT, GOV_LETTER, PILOT_SUMMARY, CONTRACT_DRAFT]
+                status:
+                  type: string
+                  enum: [GENERATED, SIGNED, HASHED, LEDGER_RECORDED, ARCHIVED]
+                hash:
+                  type: string
+                  description: HMAC-SHA256 (64 hex)
+                ledgerBlockId:
+                  type: integer
+                  nullable: true
+                ledgerTxId:
+                  type: string
+                  nullable: true
+                metadata:
+                  type: object
+                  additionalProperties: true
+            ledgerOk:
+              type: boolean
+
+    # ---------- Attendance ----------
+    AttendanceAttemptRequest:
+      type: object
+      required: [clientTimestamp, gps]
+      properties:
+        clientTimestamp:
+          type: integer
+          description: epoch ms — أي انحراف > 60s يُرفض كتضارب زمن
+        gps:
+          type: object
+          required: [latitude, longitude, timestamp]
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            accuracy:
+              type: number
+            timestamp:
+              type: integer
+        deviceId:
+          type: string
+
+    AttendanceOutcomeResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        success:
+          type: boolean
+          description: accepted (true) أو رفض (false)
+        data:
+          type: object
+          properties:
+            accepted:
+              type: boolean
+            reason:
+              type: string
+              enum: [mock_spoofed, abnormal_speed, outside_fence, clock_skew, absent]
+            certaintyScore:
+              type: number
+            verdict:
+              type: object
+            record:
+              type: object
+              description: سجل ATTENDANCE عند القبول
+
+    # ---------- HILAP ----------
+    HilapFreezeRequest:
+      type: object
+      required: [confidence]
+      properties:
+        confidence:
+          type: number
+        severity:
+          type: string
+          enum: [routine, severe]
+
+    HilapFreezeResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            frozen:
+              type: boolean
+            threshold:
+              type: number
+            reason:
+              type: string
+
+    HilapOpenRequest:
+      type: object
+      required: [blockId, reason, frozenConfidence]
+      properties:
+        blockId:
+          type: integer
+        ruleId:
+          type: string
+        reason:
+          type: string
+        evidenceHashes:
+          type: array
+          items:
+            type: string
+        frozenConfidence:
+          type: number
+
+    HilapOpenResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            stage:
+              type: string
+              enum: [SUBMIT, PRELIMINARY_REVIEW, LEGAL_ARBITRATION, EXECUTIVE_DECISION]
+            status:
+              type: string
+              enum: [open, in_review, decided, expired, escalated]
+            expiresAt:
+              type: string
+              format: date-time
+
+    HilapReviewRequest:
+      type: object
+      required: [caseId, stage, role, action]
+      properties:
+        caseId:
+          type: string
+        stage:
+          type: string
+          enum: [PRELIMINARY_REVIEW, LEGAL_ARBITRATION, EXECUTIVE_DECISION]
+        role:
+          type: string
+          enum: [org_owner, hr_manager, legal_advisor, compliance_officer, founder]
+        action:
+          type: string
+        note:
+          type: string
+
+    HilapReviewResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            stage:
+              type: string
+            status:
+              type: string
+            decision:
+              type: string
+              enum: [uphold, overturn, suspend, reinvestigate]
+              nullable: true
+            c9:
+              type: object
+
+    # ---------- ZATCA ----------
+    ZatcaSealRequest:
+      type: object
+      required: [invoice]
+      properties:
+        invoice:
+          $ref: '#/components/schemas/ZatcaInvoice'
+        prevChainHash:
+          type: string
+
+    ZatcaSealResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            invoiceId:
+              type: string
+            invoiceHash:
+              type: string
+              description: SHA-256 (64 hex)
+            qrBase64:
+              type: string
+            seal:
+              type: string
+              description: HMAC-SHA256 (64 hex)
+            timestamp:
+              type: string
+              format: date-time
+            hasProductionCsid:
+              type: boolean
+
+    ZatcaVerifyRequest:
+      type: object
+      required: [invoice, seal]
+      properties:
+        invoice:
+          $ref: '#/components/schemas/ZatcaInvoice'
+        seal:
+          type: object
+          required: [invoiceHash, seal]
+          properties:
+            invoiceHash:
+              type: string
+            seal:
+              type: string
+        prevChainHash:
+          type: string
+
+    ZatcaVerifyResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            valid:
+              type: boolean
+
+    ZatcaInvoice:
+      type: object
+      required: [id, uuid, issuedAt, seller, lines]
+      properties:
+        id:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+        issuedAt:
+          type: string
+          format: date-time
+        seller:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+            registrationId:
+              type: string
+            vatId:
+              type: string
+        buyer:
+          type: object
+          properties:
+            name:
+              type: string
+            vatId:
+              type: string
+        lines:
+          type: array
+          items:
+            type: object
+            required: [id, name, quantity, unitPrice, vatPercent]
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              quantity:
+                type: number
+              unitPrice:
+                type: number
+              vatPercent:
+                type: number
+        currency:
+          type: string
+          default: SAR
+        c9BlockId:
+          type: integer
+
+    # ---------- Pulse ----------
+    PulseResponse:
+      allOf:
+        - $ref: '#/components/schemas/SovereignEnvelope'
+      properties:
+        data:
+          type: object
+          properties:
+            generatedAt:
+              type: string
+              format: date-time
+            engines:
+              type: object
+              properties:
+                ruleEngine:
+                  type: object
+                  properties:
+                    loaded:
+                      type: boolean
+                    totalRules:
+                      type: integer
+                    executable:
+                      type: integer
+                    descriptive:
+                      type: integer
+                sade:
+                  type: object
+                  properties:
+                    ready:
+                      type: boolean
+                attendance:
+                  type: object
+                  properties:
+                    ready:
+                      type: boolean
+                    registeredPeople:
+                      type: integer
+                hilap:
+                  type: object
+                  properties:
+                    ready:
+                      type: boolean
+                zatca:
+                  type: object
+                  properties:
+                    ready:
+                      type: boolean
+                    hasProductionCsid:
+                      type: boolean
+            c9:
+              type: object
+              properties:
+                status:
+                  type: string
+                integrity:
+                  type: string
+
+  responses:
+    BadRequest:
+      description: طلب غير صالح (VALIDATION_ERROR)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Unauthorized:
+      description: هوية سيادية مفقودة أو فاسدة (SOV_401)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Forbidden:
+      description: تجاوز نطاق الصلاحية — عزل الحصن 700 (SOV_403)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    UnprocessableEntity:
+      description: رتبة غير معروفة أو تعارض هوية (SOV_422)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'

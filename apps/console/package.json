@@ -1,0 +1,25 @@
+{
+  "name": "@lexops/console",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LexOps Founder Console — لوحة المؤسس السيادية",
+  "scripts": {
+    "dev": "next dev -p 3003",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@lexops/contracts": "workspace:*",
+    "@lexops/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.4"
+  }
+}

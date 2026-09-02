@@ -1,0 +1,39 @@
+{
+  "name": "@lexops/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LexOps Backend — NestJS Modular Monolith (USDS-02)",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "start": "node dist/src/main",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@lexops/attendance": "workspace:*",
+    "@lexops/c9-ledger": "workspace:*",
+    "@lexops/contracts": "workspace:*",
+    "@lexops/geofencing": "workspace:*",
+    "@lexops/govlink": "workspace:*",
+    "@lexops/hilap": "workspace:*",
+    "@lexops/lexi": "workspace:*",
+    "@lexops/persistence": "workspace:*",
+    "@lexops/rule-engine": "workspace:*",
+    "@lexops/sade": "workspace:*",
+    "@lexops/shared": "workspace:*",
+    "@lexops/spe": "workspace:*",
+    "@lexops/zatca": "workspace:*",
+    "@nestjs/common": "^10.4.0",
+    "@nestjs/core": "^10.4.0",
+    "@nestjs/platform-express": "^10.4.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.4.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.9"
+  }
+}
